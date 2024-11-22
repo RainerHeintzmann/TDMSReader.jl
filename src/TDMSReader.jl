@@ -71,7 +71,8 @@ function readleadin(s::IO)
     @assert ntoh(read(s, UInt32)) == 0x54_44_53_6D
     toc=ToC(ltoh(read(s, UInt32)))
     toc.kTocBigEndian && throw(ErrorException("Big Endian files not supported"))
-    read(s, UInt32) == 4713 || throw(ErrorException("File not recongnized as TDMS formatted file"))
+    @show lvversion = read(s, UInt32) 
+    lvversion == 4713 || lvversion == 4712 || throw(ErrorException("File not recongnized as TDMS formatted file"))
 
     return (toc=toc,nextsegmentoffset=read(s, UInt64),rawdataoffset=read(s, UInt64),)
 end
